@@ -25,6 +25,8 @@
 // CHECK: ---> piProgramLink
 // CHECK: ZE ---> zeModuleCreate
 
+#include <exception>
+#include <stdexcept>
 #include <sycl/sycl.hpp>
 
 class MyKernel;
@@ -32,7 +34,8 @@ class MyKernel;
 void test() {
   sycl::queue Queue;
   sycl::context Context = Queue.get_context();
-
+  if (Context.get_devices().size() == 2)
+    throw std::runtime_error("get_devices size = 2");
   auto BundleInput =
       sycl::get_kernel_bundle<MyKernel, sycl::bundle_state::input>(Context);
   auto BundleObject = sycl::compile(BundleInput);
