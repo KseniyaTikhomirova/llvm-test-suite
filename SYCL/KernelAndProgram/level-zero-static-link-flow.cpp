@@ -1,5 +1,5 @@
 // RUN: %clangxx -fsycl %s -o %t.out
-// RUN: env CreateMultipleRootDevices=2 NEOReadDebugKeys=1 %GPU_RUN_PLACEHOLDER %t.out
+// RUN: %GPU_RUN_PLACEHOLDER CreateMultipleRootDevices=2 NEOReadDebugKeys=1 %t.out
 // REQUIRES: level_zero
 // Disabled run: %GPU_RUN_PLACEHOLDER SYCL_PI_TRACE=-1 ZE_DEBUG=1 %t.out 2>&1
 // | FileCheck %s
