@@ -45,6 +45,9 @@ void test() {
         << "  Platform: "
         << devices[i].get_platform().get_info<sycl::info::platform::name>()
         << std::endl;
+    std::cout << "  Driver : "
+              << devices[i].get_info<sycl::info::device::driver_version>()
+              << std::endl;
   }
 
   auto BundleInput =
