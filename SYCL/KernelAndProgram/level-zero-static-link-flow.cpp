@@ -1,6 +1,6 @@
 // RUN: %clangxx -fsycl %s -o %t.out
 // RUN: env CreateMultipleRootDevices=2 EnableTimestampPacket=1 \
-// RUN: NEOReadDebugKeys=1 SYCL_DEVICE_FILTER="gpu" %t.out
+// RUN: NEOReadDebugKeys=1 %GPU_RUN_PLACEHOLDER %t.out
 // Disabled run: %GPU_RUN_PLACEHOLDER CreateMultipleRootDevices=2
 // NEOReadDebugKeys=1 %t.out Disabled requires: level_zero Disabled run:
 // %GPU_RUN_PLACEHOLDER SYCL_PI_TRACE=-1 ZE_DEBUG=1 %t.out 2>&1 | FileCheck %s
