@@ -34,8 +34,16 @@ class MyKernel;
 void test() {
   sycl::queue Queue;
   sycl::context Context = Queue.get_context();
-  if (Context.get_devices().size() > 1)
-    throw std::runtime_error("get_devices size > 1");
+
+  std::vector<device> devices = Context.get_devices(info::device_type::gpu);
+  for (int i = 0; i < devices.size(); ++i) {
+    std::cout << std::endl;
+    std::cout << "Device " << i << ": "
+              << devices[i].get_info<info::device::name>() << std::endl;
+    std::cout << "  Platform: "
+              << devices[i].get_platform().get_info<info::platform::name>()
+              << std::endl;
+  }
 
   auto BundleInput =
       sycl::get_kernel_bundle<MyKernel, sycl::bundle_state::input>(Context);
@@ -53,5 +61,5 @@ void test() {
 int main() {
   test();
 
-  return 0;
+  return 1;
 }
