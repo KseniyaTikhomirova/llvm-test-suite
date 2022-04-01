@@ -35,14 +35,15 @@ void test() {
   sycl::queue Queue;
   sycl::context Context = Queue.get_context();
 
-  std::vector<device> devices = Context.get_devices(info::device_type::gpu);
+  std::vector<sycl::device> devices = Context.get_devices();
   for (int i = 0; i < devices.size(); ++i) {
     std::cout << std::endl;
     std::cout << "Device " << i << ": "
-              << devices[i].get_info<info::device::name>() << std::endl;
-    std::cout << "  Platform: "
-              << devices[i].get_platform().get_info<info::platform::name>()
-              << std::endl;
+              << devices[i].get_info<sycl::info::device::name>() << std::endl;
+    std::cout
+        << "  Platform: "
+        << devices[i].get_platform().get_info<sycl::info::platform::name>()
+        << std::endl;
   }
 
   auto BundleInput =
@@ -61,5 +62,5 @@ void test() {
 int main() {
   test();
 
-  return 1;
+  return 0;
 }
