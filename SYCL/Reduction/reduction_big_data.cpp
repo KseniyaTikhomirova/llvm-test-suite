@@ -48,7 +48,7 @@ int test(queue &Q, T Identity) {
   size_t MaxGlobalRange = MaxGlobalMem / sizeof(T) - 1;
   size_t NWorkItems = std::min(WGSize * MaxWGSize + 1, MaxGlobalRange);
 
-  size_t NWorkGroups = (NWorkItems - 1) / WGSize + 1;
+  size_t NWorkGroups = (WorkItems - 1) / WGSize + 1;
   nd_range<1> NDRange(range<1>{NWorkGroups * WGSize}, range<1>{WGSize});
   printTestLabel<T, BinaryOperation>(IsSYCL2020, NDRange);
 
