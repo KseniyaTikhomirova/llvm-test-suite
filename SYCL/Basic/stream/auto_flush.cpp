@@ -3,7 +3,7 @@
 // RUN: %CPU_RUN_PLACEHOLDER %t.out %CPU_CHECK_PLACEHOLDER
 // RUN: %GPU_RUN_ON_LINUX_PLACEHOLDER %t.out %GPU_CHECK_ON_LINUX_PLACEHOLDER
 // RUN: %ACC_RUN_PLACEHOLDER %t.out %ACC_CHECK_PLACEHOLDER
-//
+// UNSUPPORTED: windows
 // XFAIL: hip_nvidia
 //==-------------- copy.cpp - SYCL stream obect auto flushing test ---------==//
 //
@@ -18,7 +18,25 @@
 
 using namespace sycl;
 
+#include <execinfo.h>
+#include <signal.h>
+#include <unistd.h>
+
+void sighandler(int sig) {
+  void *array[10];
+  size_t size;
+
+  // get void*'s for all entries on the stack
+  size = backtrace(array, 10);
+
+  // print out all the frames to stderr
+  fprintf(stderr, "Error: signal %d:\n", sig);
+  backtrace_symbols_fd(array, size, STDERR_FILENO);
+  exit(1);
+}
+
 int main() {
+  signal(SIGSEGV, sighandler);
   queue Queue;
 
   // Test that data is flushed to the buffer at the end of kernel execution even
