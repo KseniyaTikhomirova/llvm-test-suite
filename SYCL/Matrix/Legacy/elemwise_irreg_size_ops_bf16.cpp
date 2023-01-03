@@ -1,8 +1,31 @@
-#define TM 8
-#define TN SG_SZ
-#define TK 16
+//==-------- elemwise_irreg_size_ops_bf16.cpp  - DPC++ joint_matrix---- ----==//
+//
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+// REQUIRES: matrix
 
-#define BF16_EPSILON 0.00781250
+// RUN: %clangxx -fsycl %s -o %t.out -DSYCL_EXT_ONEAPI_MATRIX_VERSION=1
+// This test is for element wise operations when matrix size does not multiply
+// SG size. This corner case only applies to AMX. Also, it tests bf16 type.
+// only run this on AMX
+// RUN: %CPU_RUN_PLACEHOLDER %t.out
+
+#include <iostream>
+#include <sycl/sycl.hpp>
+
+using namespace sycl;
+using namespace sycl::ext::oneapi::experimental::matrix;
+
+#define SG_SZ 16
+
+// 10x12 is not multiply the sg size, slicing implementation will have to insert
+// padding
+#define TM 10
+#define TN 12
+#define TK 16
 
 template <typename T, size_t NUM_ROWS, size_t NUM_COLS> struct big_matrix {
 public:
@@ -74,6 +97,10 @@ void matrix_multiply(big_matrix<T1, NUM_ROWS_C, NUM_COLS_C> &C,
                                N * 2, matrix_layout::packed_b);
              sub_c = joint_matrix_mad(sg, sub_a, sub_b, sub_c);
            }
+           auto wi_slice_c = sub_c.get_wi_data();
+           for (int i = 0; i < wi_slice_c.length(); i++) {
+             wi_slice_c[i] += 5.0;
+           }
            joint_matrix_store(sg, sub_c,
                               accC.get_pointer() + (sg_startx * TM) * N +
                                   sg_starty / SG_SZ * TN,
@@ -118,6 +145,7 @@ void matrix_multiply_ref(int *A_mem, int *B_mem, int *C_mem, int M, int N,
         }
         *((float *)(C_mem + m * N + n)) = acc;
       }
+      *((float *)(C_mem + m * N + n)) += 5.0;
     }
 }
 
@@ -151,10 +179,12 @@ int main() {
   bool res = true;
   for (int i = 0; i < MATRIX_M; i++) {
     for (int j = 0; j < MATRIX_N; j++) {
-      if ((fabs(C[i][j]) - fabs(D[i][j])) > BF16_EPSILON)
+      if (C[i][j] != D[i][j])
         res = false;
     }
   }
-  std::cout << (res ? "passed" : "failed") << std::endl;
-  return !res;
+  if (res)
+    std::cout << "passed\n";
+  else
+    std::cout << "failed\n";
 }
