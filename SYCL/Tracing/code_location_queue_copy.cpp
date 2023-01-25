@@ -1,10 +1,10 @@
 // RUN: %clangxx -fsycl -fsycl-targets=%sycl_triple %s -o %t.out
 // RUN: sycl-trace --sycl %CPU_RUN_PLACEHOLDER %t.out %CPU_CHECK_PLACEHOLDER
 
-// Test tracing of the code location data for queue.submit in case of failure
+// Test tracing of the code location data for queue.copy in case of failure
 // (exception generation)
 //
-// CHECK: code_location_queue_submit.cpp:17 main
+// CHECK: code_location_queue_copy.cpp:17 main
 
 #include <sycl/sycl.hpp>
 
@@ -14,8 +14,7 @@ int main() {
   unsigned char *HostAllocSrc = (unsigned char *)sycl::malloc_host(1, Q);
   unsigned char *HostAllocDst = NULL;
   try {
-    Q.submit(
-        [&](sycl::handler &cgh) { cgh.copy(HostAllocDst, HostAllocSrc, 1); });
+    Q.copy(HostAllocDst, HostAllocSrc, 1);
   } catch (sycl::exception &e) {
     ExceptionCaught = true;
   }

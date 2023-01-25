@@ -1,10 +1,10 @@
 // RUN: %clangxx -fsycl -fsycl-targets=%sycl_triple %s -o %t.out
 // RUN: sycl-trace --sycl %CPU_RUN_PLACEHOLDER %t.out %CPU_CHECK_PLACEHOLDER
 
-// Test tracing of the code location data for queue.submit in case of failure
-// (exception generation)
+// Test tracing of the code location data for queue.parallel_for in case of
+// failure (exception generation)
 //
-// CHECK: code_location_queue_submit.cpp:::E2ETestKernel:ln31:col104
+// CHECK: code_location_queue_parallel_for.cpp:21 E2ETestKernel
 
 #include <sycl/sycl.hpp>
 
