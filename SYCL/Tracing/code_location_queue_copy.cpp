@@ -1,5 +1,5 @@
 // RUN: %clangxx -fsycl -fsycl-targets=%sycl_triple %s -o %t.out
-// RUN: sycl-trace --sycl %CPU_RUN_PLACEHOLDER %t.out %CPU_CHECK_PLACEHOLDER
+// RUN: %CPU_RUN_PLACEHOLDER sycl-trace --sycl  %t.out %CPU_CHECK_PLACEHOLDER
 
 // Test tracing of the code location data for queue.copy in case of failure
 // (exception generation)
