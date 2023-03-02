@@ -1,3 +1,4 @@
+// UNSUPPORTED: windows
 // RUN: %clangxx -fsycl -fsycl-targets=%sycl_triple %s -o %t.out
 // RUN: %CPU_RUN_PLACEHOLDER sycl-trace --sycl  %t.out %CPU_CHECK_PLACEHOLDER
 
