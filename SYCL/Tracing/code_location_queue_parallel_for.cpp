@@ -5,7 +5,7 @@
 // Test tracing of the code location data for queue.parallel_for in case of
 // failure (exception generation)
 //
-// CHECK: code_location_queue_parallel_for.cpp:21 E2ETestKernel
+// CHECK: code_location_queue_parallel_for.cpp:22 E2ETestKernel
 
 #include <sycl/sycl.hpp>
 

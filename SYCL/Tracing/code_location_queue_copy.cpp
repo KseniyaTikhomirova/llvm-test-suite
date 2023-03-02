@@ -5,7 +5,7 @@
 // Test tracing of the code location data for queue.copy in case of failure
 // (exception generation)
 //
-// CHECK: code_location_queue_copy.cpp:17 main
+// CHECK: code_location_queue_copy.cpp:18 main
 
 #include <sycl/sycl.hpp>
 

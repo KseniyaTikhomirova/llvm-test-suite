@@ -5,7 +5,7 @@
 // Test tracing of the code location data for queue.submit in case of failure
 // (exception generation)
 //
-// CHECK: code_location_queue_submit.cpp:17 main
+// CHECK: code_location_queue_submit.cpp:18 main
 
 #include <sycl/sycl.hpp>
 
