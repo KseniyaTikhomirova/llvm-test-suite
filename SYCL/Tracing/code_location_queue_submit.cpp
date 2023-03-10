@@ -18,6 +18,7 @@ int main() {
     Q.submit(
         [&](sycl::handler &cgh) { cgh.copy(HostAllocDst, HostAllocSrc, 1); });
   } catch (sycl::exception &e) {
+    std::ignore = e;
     ExceptionCaught = true;
   }
   Q.wait();

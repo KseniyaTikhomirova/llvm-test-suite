@@ -17,6 +17,7 @@ int main() {
   try {
     Q.copy(HostAllocDst, HostAllocSrc, 1);
   } catch (sycl::exception &e) {
+    std::ignore = e;
     ExceptionCaught = true;
   }
   Q.wait();
